@@ -2,6 +2,9 @@
 
 
 <?php
+
+
+session_start();
 /**
 * Распечатка массива
 **/
@@ -11,7 +14,8 @@ function print_arr1($array){
 
 print_arr1 ($_POST);
 
-if(isset($_REQUEST['submit'])){
+$_SESSION = $_POST;
+/*if(isset($_REQUEST['submit'])){
 
  $_SESSION['id'] = $_POST['id'];
 $_SESSION['name'] = $_POST['name'];
@@ -19,8 +23,28 @@ $_SESSION['price'] = $_POST['price'];
 $_SESSION['quantaty'] = $_POST['quantaty'];
 
 }
+*/
 
+
+
+if(isset($_REQUEST['submit'])){
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = []; // тут создаем пустой массив корзины, если его еще нет.
+    }
+    if (!empty($_SESSION['cart'][$_POST['id']])) {
+        $_SESSION['cart'][$_POST['id']]['quantaty']++; // продукт уже есть в корзине - увеличиваем количество на единичку
+    } else {
+        $_SESSION['cart'][$_POST['id']] = [
+            'quantaty' => 1, // новый продукт добавляем в корзину
+        ];
+    }
+}
+print_arr1 ($_SESSION);
 ?>
+
+
+
+
 
 <?php
 
@@ -61,6 +85,10 @@ else{
   
   echo'В сессии ничего нет, поэтому и напечатали это сообщение';
 }
+
+
+
+
 
 
 
